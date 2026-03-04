@@ -2,7 +2,6 @@ import java.util.*;
 
 class Solution {
     public int[] solution(int[] numbers) {
-        int[] answer = {};
         HashSet<Integer> hs = new HashSet<>();
         
         for (int i = 0; i < numbers.length - 1; i++) {
@@ -11,13 +10,7 @@ class Solution {
             }
         }
         
-        answer = new int[hs.size()];
-        int i = 0;
-        for (int s : hs) {
-            answer[i++] = s;
-        }
+        return hs.stream().sorted().mapToInt(Integer::intValue).toArray();
         
-        Arrays.sort(answer);
-        return answer;
     }
 }
