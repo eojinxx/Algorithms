@@ -10,7 +10,7 @@ class Solution {
     private static int answer = 0;
     private static Deque<Integer> stack = new ArrayDeque<>();
     
-    private static void putBarcket(int d) {
+    private static void putBucket(int d) {
         if (!stack.isEmpty() && stack.peek() == d) {
             stack.pop();
             answer += 2;
@@ -27,7 +27,7 @@ class Solution {
                 if (board[j][p] != 0) {
                     int d = board[j][p];
                     board[j][p] = 0;
-                    putBarcket(d);
+                    putBucket(d);
                     break;
                 }
             }
