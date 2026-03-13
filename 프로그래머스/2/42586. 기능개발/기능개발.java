@@ -1,66 +1,30 @@
+
 import java.util.*;
-
-class Node {
-    private int progress;
-    private int speed;
-    
-    public Node(int progress, int speed) {
-        this.progress = progress;
-        this.speed = speed;
-    }
-    
-    public int getProgress() {
-        return this.progress;
-    }
-    
-    public void plusProgress() {
-        if (progress < 100)
-            progress += speed;
-    }
-    
-    public boolean isComplete() {
-        return progress >= 100;
-    }
-}
-
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
-        ArrayList<Integer> ans = new ArrayList<>();
-        Deque<Node> queue = new ArrayDeque<>();
+        List<Integer> ans = new ArrayList<>();
+        Queue<Integer> days = new LinkedList<>();
+
+        // 1. 각 작업이 며칠 뒤에 끝나는지 계산해서 큐에 넣기
         for (int i = 0; i < progresses.length; i++) {
-            queue.offer(new Node(progresses[i], speeds[i]));
+            int remain = 100 - progresses[i];
+            int day = (int) Math.ceil((double) remain / speeds[i]);
+            days.offer(day);
         }
-        
-        while (!queue.isEmpty()) {
-            int size = queue.size();
-            int cnt = 0;
-            Node first = queue.peek();
-            
-            if (first.isComplete()) {
-                boolean flag = true;
-                for (Node cur : queue) {
-                    
-                    if (!cur.isComplete()) {
-                        flag = false;
-                    }
-                    
-                    if (flag) {
-                        queue.poll();
-                        cnt++;
-                    } else {
-                        cur.plusProgress();
-                    }
-                }
-            } else {
-                for (Node cur : queue) {
-                    cur.plusProgress();
-                }
+
+        // 2. 배포일 묶기
+        while (!days.isEmpty()) {
+            int currentDay = days.poll(); // 기준이 되는 첫 번째 기능의 완성일
+            int cnt = 1;
+
+            // 뒤에 있는 기능 중 기준일보다 빨리 끝나는 애들은 다 같이 나감
+            while (!days.isEmpty() && days.peek() <= currentDay) {
+                days.poll();
+                cnt++;
             }
-            
-            if (cnt != 0)
-                ans.add(cnt);
+            ans.add(cnt);
         }
-        
+
         return ans.stream().mapToInt(Integer::intValue).toArray();
     }
 }
