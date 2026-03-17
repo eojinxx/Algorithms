@@ -4,35 +4,39 @@ import java.util.*;
 // return: 최종적으로 방을 개설한 사람이 보게되는 문자열 배열
 class Solution {
     public String[] solution(String[] record) {
-        ArrayList<String> answer = new ArrayList<>();
-            ArrayList<String> ans = new ArrayList<>();
-            HashMap<String, String> map = new HashMap<>();
+        HashMap<String, String> idToNick = new HashMap<>();
+        // Id와 Command 보관
+        List<String[]> logs = new ArrayList<>();
 
 
-            for (String s : record) {
-                String[] arr = s.split(" ");
-
-                if (arr[0].equals("Enter")) {
-                    map.put(arr[1], arr[2]);
-                    ans.add(arr[1] + "님이 들어왔습니다.");
-                    
-
-                } else if (arr[0].equals("Leave")) {
-                    ans.add(arr[1] + "님이 나갔습니다.");
-
-                } else if (arr[0].equals("Change")) {
-                    map.put(arr[1], arr[2]);
-                }
+        for (String line : record) {
+            String[] info = line.split(" ");
+            String command = info[0];
+            String uid = info[1];
+            
+            if (command.equals("Enter") || command.equals("Change")) {
+                idToNick.put(uid, info[2]);
             }
-
-            for (String s : ans) {
-                String[] ss = s.split("님");
-                answer.add(map.get(ss[0]) + "님"+ ss[1]);
+            
+            if (command.equals("Enter") || command.equals("Leave")) {
+                logs.add(new String[] {uid, command});
             }
+        }
+
+        String[] answer = new String[logs.size()];
+        for (int i = 0; i < logs.size(); i++) {
+            String uid = logs.get(i)[0];
+            String command = logs.get(i)[1];
+            String nickname = idToNick.get(uid);
+            
+            if (command.equals("Enter")) {
+                answer[i] = nickname + "님이 들어왔습니다.";
+            } else {
+                answer[i] = nickname + "님이 나갔습니다.";
+            }
+        }
 
 
-            return answer.toArray(String[]::new);
+        return answer;
     }
-    
-    
 }
