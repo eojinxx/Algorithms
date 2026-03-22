@@ -5,18 +5,14 @@ class Solution
     public int solution(String s)
     {
         Deque<Character> stack = new ArrayDeque<>();
-        
         for (char c : s.toCharArray()) {
-            if (stack.isEmpty()) stack.push(c);
-            else {
-                if (stack.peek() == c) {
-                    stack.pop();
-                } else {
-                    stack.push(c);
-                }
-            }
+            if (!stack.isEmpty() && stack.peek() == c)
+                stack.pop();
+            else
+                stack.push(c);
         }
-        return stack.isEmpty() ? 1: 0;
+
+        return stack.isEmpty() ? 1 : 0;
     }
     
 }
