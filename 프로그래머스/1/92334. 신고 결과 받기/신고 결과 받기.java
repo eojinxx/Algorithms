@@ -28,6 +28,15 @@ class Solution {
                 }
             }
         }
+        /**
+        reportedMap.entrySet().stream().map(Map.Entry<String, HashSet<String>>::getValue).forEach(set -> {
+            if (set.size() >= k) {
+                for (String s : set) {
+                    count.put(s, count.getOrDefault(s, 0) + 1);
+                }
+            }
+        });
+        */
         
         int[] answer = new int[id_list.length];
         
