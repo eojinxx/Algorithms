@@ -74,6 +74,14 @@ class Solution {
         idx = 0;
         postOrder(root);
 
+        /**
+        ArrayList<Integer> preOrderList = new ArrayList<>();
+        ArrayList<Integer> postOrderList = new ArrayList<>();
+        // answer[][]  : 포인터(레퍼런스) 개념
+        answer[0] = preOrderList.stream().mapToInt(Integer::intValue).toArray();
+        answer[1] = postOrderList.stream().mapToInt(Integer::intValue).toArray();
+        */
+        
         return answer;
     }
     
