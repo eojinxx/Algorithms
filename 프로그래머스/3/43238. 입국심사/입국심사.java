@@ -19,6 +19,7 @@ class Solution {
             }
             
             if (sum >= n) {
+                // sum == n 일 때 바로 멈추면 안된다. 29분도 sum == n이고 28분도 sum == n 이므로 최소시간을 못찾게 된다.
                 answer = mid;
                 right = mid - 1;
             } else if (sum < n) {
