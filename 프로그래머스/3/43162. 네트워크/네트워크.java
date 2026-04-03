@@ -1,33 +1,25 @@
 class Solution {
     
-    private static int[] unf;
-    private static void union(int x, int y) {
-        int a = find(x);
-        int b = find(y);
-        if (a != b) unf[a] = b;
-    }
+    private static boolean[] check;
     
-    private static int find(int x) {
-        if (unf[x] == x) return x;
-        else return unf[x] = find(unf[x]);
-    }
-    public int solution(int n, int[][] computers) {
-        unf = new int[computers.length];
+    private void dfs(int[][] computers, int start) {
+        check[start] = true;
         for (int i = 0; i < computers.length; i++) {
-            unf[i] = i;
-        }
-        
-        for (int i = 0; i < computers.length; i++) {
-            for (int j = 0; j < computers.length; j++) {
-                if (computers[i][j] == 1 && find(i) != find(j)) {
-                    union(i, j);
-                }
+            if (computers[start][i] == 1 && !check[i]) {
+                dfs(computers, i);
             }
         }
-        
+    }
+    
+    public int solution(int n, int[][] computers) {
+        check = new boolean[n];
         int answer = 0;
-        for (int i = 0; i < unf.length; i++) {
-            if (unf[i] == i) answer++;
+        
+        for (int i = 0; i < computers.length; i++) {
+            if (!check[i]) {
+                dfs(computers, i);
+                answer++;
+            }
         }
         return answer;
     }
