@@ -27,10 +27,7 @@ class Solution {
         
         
         dfs("ICN");
-        String[] arr = new String[answer.size()];
-        for (int i = 0; i < answer.size(); i++) {
-                arr[answer.size() - 1 - i] = answer.get(i);
-        }
-        return arr;
+        Collections.reverse(answer);
+        return answer.toArray(String[]::new);
     }
 }
