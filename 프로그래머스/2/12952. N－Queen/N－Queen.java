@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 class Solution {
     private static int[] board;
     private static int ans;
