@@ -4,26 +4,21 @@ class Solution
 {
     public int solution(int [][]board)
     {
-        int ans = 0;
-        int r = board.length;
-        int c = board[0].length;
-        
-        if (r == 1 || c == 1) {
-            return Arrays.stream(board[0]).min().getAsInt();
-        }
+        int r = board.length, c = board[0].length;
         
         for (int i = 1; i < r; i++) {
-            for (int j = 1; j < c; j++) {
-                if (board[i][j] == 1)
-                    board[i][j] = Math.min(Math.min(board[i][j - 1], board[i - 1][j]), board[i - 1][j - 1]) + 1;
+            for (int j = 0; j < c; j++) {
+                if (i - 1 < 0 || j - 1 < 0) continue;
+                if (board[i][j] == 0 || board[i - 1][j] == 0 || board[i - 1][j - 1] == 0 || board[i][j - 1] == 0) continue;
+                
+                board[i][j] = Math.min(Math.min(board[i - 1][j], board[i - 1][j - 1]), board[i][j - 1]) + 1;
             }
         }
         
-        for (int[] tmp : board) {
-            for (int num : tmp) {
-                ans = Math.max(ans, num);
-            }
-        }
-        return ans * ans;
+        int max = Arrays.stream(board)
+            .flatMapToInt(Arrays::stream)
+            .max()
+            .getAsInt();
+        return max * max;
     }
 }
