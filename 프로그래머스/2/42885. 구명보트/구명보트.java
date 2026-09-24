@@ -8,12 +8,11 @@
             int right = people.length - 1;
             
             while (left <= right) {
-                if (people[left] + people[right] > limit) {
-                    right--;
-                } else {
+                if (people[left] + people[right] <= limit) {    
                     left++;
-                    right--;
-                }
+                } 
+                
+                right--;
                 ans++;
             }
             
