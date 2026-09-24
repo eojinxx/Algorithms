@@ -10,9 +10,8 @@ class Solution {
             map.put(tangerine[i], map.getOrDefault(tangerine[i], 0) + 1);
         }
         
-        List<Integer> list = map.values().stream()
-            .sorted(Comparator.reverseOrder())
-            .toList();
+        ArrayList<Integer> list = new ArrayList<>(map.values());
+        list.sort(Comparator.reverseOrder());
         
         for (int i : list) {
             if (i >= k) break;
