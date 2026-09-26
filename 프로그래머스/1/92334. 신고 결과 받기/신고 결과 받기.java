@@ -9,11 +9,7 @@ class Solution {
             String reporter = tmp[0];
             String reportee = tmp[1];
             
-            if (!map.containsKey(reportee)) {
-                map.put(reportee, new HashSet<>());
-            }
-            
-            map.get(reportee).add(reporter);
+            map.computeIfAbsent(reportee, x -> new HashSet<>()).add(reporter);
         }
         
         int[] ans = new int[id_list.length];
