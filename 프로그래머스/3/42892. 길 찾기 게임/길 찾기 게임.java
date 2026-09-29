@@ -1,20 +1,16 @@
 import java.util.*;
-
 class Node implements Comparable<Node> {
-    int id;
-    int x;
-    int y;
-    Node lt;
-    Node rt;
-
-    public Node(int id, int x, int y) {
+    int id, x, y;
+    Node lt, rt;
+    
+    Node(int id, int x, int y, Node lt, Node rt) {
         this.id = id;
         this.x = x;
         this.y = y;
-        lt = null;
-        rt = null;
+        this.lt = lt;
+        this.rt = rt;
     }
-
+    
     @Override
     public int compareTo(Node o) {
         return this.y != o.y ? o.y - this.y : this.x - o.x;
@@ -22,67 +18,67 @@ class Node implements Comparable<Node> {
 }
 
 class Solution {
-    private static int[][] answer;
-    private static int idx = 0;
-    public static void preOrder(Node node) {
-        if (node == null) return;
-        else {
-            answer[0][idx++] = node.id;
-            preOrder(node.lt);
-            preOrder(node.rt);
-        }
-    }
-
-    public static void postOrder(Node node) {
-        if (node == null) return;
-        else {
-            postOrder(node.lt);
-            postOrder(node.rt);
-            answer[1][idx++] = node.id;
-
-        }
-    }
-
-    public static void insertNode(Node parent, Node child) {
-        if (parent.x < child.x) {
-            if (parent.rt == null) parent.rt = child;
-            else insertNode(parent.rt, child);
-        } else {
-            if (parent.lt == null) parent.lt = child;
-            else insertNode(parent.lt, child);
-        }
-    }
-
-    public static int[][] solution(int[][] nodeinfo) {
-        ArrayList<Node> tree = new ArrayList<>();
-
-
-        for (int i = 0; i < nodeinfo.length; i++) {
-            tree.add(new Node(i + 1, nodeinfo[i][0], nodeinfo[i][1]));
-        }
-
-        Collections.sort(tree);
-        Node root = tree.get(0);
-        // buildTree
-        for (int i = 1; i < tree.size(); i++) {
-            insertNode(root, tree.get(i));
-        }
-
-
-        answer = new int[2][tree.size()];
-        preOrder(root);
-        idx = 0;
-        postOrder(root);
-
-        /**
-        ArrayList<Integer> preOrderList = new ArrayList<>();
-        ArrayList<Integer> postOrderList = new ArrayList<>();
-        // answer[][]  : 포인터(레퍼런스) 개념
-        answer[0] = preOrderList.stream().mapToInt(Integer::intValue).toArray();
-        answer[1] = postOrderList.stream().mapToInt(Integer::intValue).toArray();
-        */
+    private static int[][] ans;
+    private static ArrayList<Integer> preorderList = new ArrayList<>();
+    private static ArrayList<Integer> postorderList = new ArrayList<>();
+    
+    public int[][] solution(int[][] nodeinfo) {
+        ans = new int[2][nodeinfo.length];
         
-        return answer;
+        ArrayList<Node> list = new ArrayList<>();
+        
+        Node root;
+        
+        for (int i = 0; i < nodeinfo.length; i++) {
+            list.add(new Node(i + 1, nodeinfo[i][0], nodeinfo[i][1], null, null));
+        }
+        
+        Collections.sort(list);
+        
+        root = list.get(0);
+        
+        for (int i = 1; i < list.size(); i++) {
+            buildTree(root, list.get(i));
+        }
+        preorder(root);
+        postorder(root);
+        ans[0] = preorderList.stream()
+            .mapToInt(Integer::intValue)
+            .toArray();
+        ans[1] = postorderList.stream()
+            .mapToInt(Integer::intValue)
+            .toArray();
+        
+        return ans;
     }
     
+    private static void buildTree(Node parent, Node child) {
+        if (parent.x < child.x) {
+            if (parent.rt == null) {
+                parent.rt = child;
+                return;
+            }
+            buildTree(parent.rt, child);
+        } else {
+            if (parent.lt == null) {
+                parent.lt = child;
+                return;
+            }
+            buildTree(parent.lt, child);
+        }
+    }
+    
+    private static void preorder(Node node) {
+        if (node == null) return;
+        preorderList.add(node.id);
+        preorder(node.lt);
+        preorder(node.rt);
+    } 
+    
+    private static void postorder(Node node) {
+        if (node == null) return;
+        postorder(node.lt);
+        postorder(node.rt);
+        postorderList.add(node.id);
+    }
 }
