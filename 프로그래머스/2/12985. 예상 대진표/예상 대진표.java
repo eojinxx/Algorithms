@@ -3,7 +3,6 @@ import java.util.*;
 
 class Solution
 {
-    // n: 참가자 수
     public int solution(int n, int a, int b)
     {
         int cnt = 0;
