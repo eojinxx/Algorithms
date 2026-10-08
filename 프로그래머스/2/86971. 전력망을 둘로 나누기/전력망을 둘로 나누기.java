@@ -1,42 +1,41 @@
+import java.util.*;
+
 class Solution {
-    private int[] unf;
-    public int solution(int n, int[][] wires) {
-        unf = new int[n + 1];
+    private ArrayList<Integer>[] adj;
+    private boolean[] visited;
+    private int N, ans;
+    
+    private int dfs(int now) {
+        visited[now] = true;
+        int sum = 0;
         
-        int ans = Integer.MAX_VALUE;
-        for (int i = 0; i < wires.length; i++) {
-            int cnt = 0;
-            
-            for (int l = 1; l <= n; l++) {
-                unf[l] = l;
+        for (int next : adj[now]) {
+            if (!visited[next]) {
+                int cnt = dfs(next);
+                ans = Math.min(ans, Math.abs(N - cnt * 2));
+                sum += cnt;
             }
-            
-            for (int j = 0; j < wires.length; j++) {
-                if (i == j) continue;
-                if (find(wires[j][0]) != find(wires[j][1])) {
-                    union(wires[j][0], wires[j][1]);
-                }
-            }
-            
-            int root = find(1);
-            for (int k = 1; k <= n; k++) {
-                if (root == find(k)) cnt++;
-            }
-            
-            ans = Math.min(ans, Math.abs(n - cnt - cnt));
         }
         
+        return sum + 1;
+    }
+    
+    public int solution(int n, int[][] wires) {
+        adj = new ArrayList[n + 1];
+        visited = new boolean[n + 1];
+        N = n;
+        ans = Integer.MAX_VALUE;
+        
+        for (int i = 1; i <= n; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        
+        for (int i = 0; i < wires.length; i++) {
+            adj[wires[i][0]].add(wires[i][1]);
+            adj[wires[i][1]].add(wires[i][0]);
+        }
+        
+        dfs(1);
         return ans;
-    }
-    
-    private int find(int x) {
-        if (unf[x] == x) return x;
-        return unf[x] = find(unf[x]);
-    }
-    
-    private void union(int x, int y) {
-        int a = find(x);
-        int b = find(y);
-        if (a != b) unf[a] = b;
     }
 }
