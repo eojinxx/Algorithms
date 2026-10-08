@@ -1,41 +1,42 @@
-import java.util.*;
-
 class Solution {
-    private static ArrayList<Integer>[] adj;
-    private static boolean[] visited;
-    private static int N, answer;
-    
-    private static int dfs(int now) {
-        visited[now] = true;
-        int sum = 0;
+    private int[] unf;
+    public int solution(int n, int[][] wires) {
+        unf = new int[n + 1];
         
-        for (int next : adj[now]) {
-            if (!visited[next]) {
-                int cnt = dfs(next);
-                answer = Math.min(answer, Math.abs(N - cnt * 2));
-                sum += cnt; 
+        int ans = Integer.MAX_VALUE;
+        for (int i = 0; i < wires.length; i++) {
+            int cnt = 0;
+            
+            for (int l = 1; l <= n; l++) {
+                unf[l] = l;
             }
+            
+            for (int j = 0; j < wires.length; j++) {
+                if (i == j) continue;
+                if (find(wires[j][0]) != find(wires[j][1])) {
+                    union(wires[j][0], wires[j][1]);
+                }
+            }
+            
+            int root = find(1);
+            for (int k = 1; k <= n; k++) {
+                if (root == find(k)) cnt++;
+            }
+            
+            ans = Math.min(ans, Math.abs(n - cnt - cnt));
         }
         
-        return sum + 1;
+        return ans;
     }
     
-    public int solution(int n, int[][] wires) {
-        N = n;
-        answer = Integer.MAX_VALUE;
-        visited = new boolean[n + 1];       
-        adj = new ArrayList[N + 1];
-        
-        for (int i = 1; i <= N; i++) {
-            adj[i] = new ArrayList<>();
-        }
-        
-        for (int[] wire : wires) {
-            adj[wire[0]].add(wire[1]);
-            adj[wire[1]].add(wire[0]);
-        }
-        
-        dfs(1);
-        return answer;
+    private int find(int x) {
+        if (unf[x] == x) return x;
+        return unf[x] = find(unf[x]);
+    }
+    
+    private void union(int x, int y) {
+        int a = find(x);
+        int b = find(y);
+        if (a != b) unf[a] = b;
     }
 }
