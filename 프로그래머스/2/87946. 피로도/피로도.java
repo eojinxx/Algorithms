@@ -1,23 +1,27 @@
+import java.util.*;
+
 class Solution {
-    private static int ans;
-    private static boolean[] check;
+    private static int depth;
+    private static int ans = Integer.MIN_VALUE;
+    private static boolean[] checked;
     
-    public static void dfs(int k, int[][] dungeons, int cnt) {
-        
-        for (int i = 0; i < dungeons.length; i++) {
-            if (k >= dungeons[i][0] && !check[i]) {
-                check[i] = true;
-                dfs(k - dungeons[i][1], dungeons, cnt + 1);
-                ans = Math.max(ans, cnt + 1);
-                check[i] = false;
-            }
+    private void dfs(int d, int k, int[][] dungeons) {
+        for (int i = 0; i < depth; i++) {
+            if (checked[i]) continue;
+            if (k < dungeons[i][0]) continue;
+            
+            checked[i] = true;
+            ans = Math.max(ans, d + 1);
+            dfs(d + 1, k - dungeons[i][1], dungeons);
+            checked[i] = false;
         }
     }
     
     public int solution(int k, int[][] dungeons) {
-        check  = new boolean[dungeons.length];
-        dfs(k, dungeons, 0);
-        return ans;
+        depth = dungeons.length;
+        checked = new boolean[depth];
+        dfs(0, k, dungeons);
         
+        return ans;
     }
 }
