@@ -1,41 +1,47 @@
-import java.util.*;
-
 class Solution {
-    private static int[] location;
-    private static int ans;
-    private static int N;
+    private int cnt;
     
-    private static void backtrack(int col) {
-        if (col == N) {
-            ans++;
-            return;
+    private void dfs(int n, int k, int prev, boolean[][] board) {
+        if (n == k) {
+            cnt++;
         }
         
-        for (int i = 0; i < N; i++) {
-            if(isValid(i, col)) {
-                location[col] = i;
-                backtrack(col + 1);
-                location[col] = 0;
+        for (int i = 0; i < n; i++) {
+            boolean flag = true;
+            
+            if (k != 0) {
+                for (int j = 0; j < k; j++) {
+                    if (board[i][j]) {
+                        flag = false;
+                        break;
+                    }
+                    
+                    for (int l = 0; l < n; l++) {
+                        if (Math.abs(k - j) == Math.abs(i - l)) {
+                            if (board[l][j]) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (flag) {
+                    board[i][k] = true;
+                    dfs(n, k + 1, i, board);
+                    board[i][k] = false;
+                }
+                
+            } else {
+                board[i][k] = true;
+                dfs(n, k + 1, i, board);
+                board[i][k] = false;
             }
         }
-    }
-    
-    private static boolean isValid(int row, int col) {
-        for (int c = 0; c < col; c++) {
-            int r = location[c];
-            if (r == row || c == col || (Math.abs(row - r) == Math.abs(col - c))) {
-                return false;
-            }
-        }
-        
-        return true;
     }
     public int solution(int n) {
-        location = new int[n];
-        N = n;
-        backtrack(0);
-        return ans;
-        
-        
+        boolean[][] board = new boolean[n][n];
+        dfs(n, 0, 0, board);
+        return cnt;
     }
 }
