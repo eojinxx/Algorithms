@@ -1,47 +1,38 @@
 class Solution {
-    private int cnt;
+    private int[] location;
+    private int ans;
+    private int N;
     
-    private void dfs(int n, int k, int prev, boolean[][] board) {
-        if (n == k) {
-            cnt++;
-        }
+    private void dfs(int col) {
+        if (N == col) {
+            ans++;
+            return;
+        } 
         
-        for (int i = 0; i < n; i++) {
-            boolean flag = true;
-            
-            if (k != 0) {
-                for (int j = 0; j < k; j++) {
-                    if (board[i][j]) {
-                        flag = false;
-                        break;
-                    }
-                    
-                    for (int l = 0; l < n; l++) {
-                        if (Math.abs(k - j) == Math.abs(i - l)) {
-                            if (board[l][j]) {
-                                flag = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                
-                if (flag) {
-                    board[i][k] = true;
-                    dfs(n, k + 1, i, board);
-                    board[i][k] = false;
-                }
-                
-            } else {
-                board[i][k] = true;
-                dfs(n, k + 1, i, board);
-                board[i][k] = false;
+        for (int i = 0; i < N; i++) {
+            if (isValid(i, col)) {
+                location[col] = i;
+                dfs(col + 1);
+                location[col] = -1;
             }
         }
     }
+    
+    private boolean isValid(int row, int col) {
+        for (int i = 0; i < col; i++) {
+            int r = location[i];
+            if (r == row || Math.abs(row -r) == Math.abs(col - i)) {
+                return false;
+            }
+        } 
+        
+        return true;
+    }
+    
     public int solution(int n) {
-        boolean[][] board = new boolean[n][n];
-        dfs(n, 0, 0, board);
-        return cnt;
+        location = new int[n];
+        N = n;
+        dfs(0);
+        return ans;
     }
 }
